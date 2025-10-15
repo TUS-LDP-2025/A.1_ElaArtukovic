@@ -1936,8 +1936,8 @@ Transform:
   m_GameObject: {fileID: 82176902}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.13108401, y: -0.15710351, z: -0.0000941328}
-  m_LocalScale: {x: 1, y: 43.857723, z: 1}
+  m_LocalPosition: {x: 0.002, y: 0.008, z: 0.006}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 108483287}
@@ -2642,8 +2642,8 @@ Transform:
   m_GameObject: {fileID: 108483286}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.00018107916, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 1.309, z: -0.012}
-  m_LocalScale: {x: 0.71716, y: 0.019095823, z: 0.71716}
+  m_LocalPosition: {x: 0.492, y: 1.309, z: -0.012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 82176903}
@@ -2993,8 +2993,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FirstPersonController: {fileID: 1006230651}
   armController: {fileID: 108483293}
-  handTransform: {fileID: 108483287}
-  grabRadius: 1
+  handTransform: {fileID: 82176903}
+  grabRadius: 3
 --- !u!43 &195827772
 Mesh:
   m_ObjectHideFlags: 0
@@ -4408,7 +4408,7 @@ GameObject:
   - component: {fileID: 362187682}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5376,7 +5376,7 @@ GameObject:
   - component: {fileID: 604050927}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10365,7 +10365,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 937451010987979973, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.74
+      value: 14.09
       objectReference: {fileID: 0}
     - target: {fileID: 2351121289802177058, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_IsActive
@@ -10373,7 +10373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2862278905927072855, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.1199999
+      value: -0.12000007
       objectReference: {fileID: 0}
     - target: {fileID: 2862278905927072855, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10381,11 +10381,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2862278905927072855, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.7400007
+      value: 14.09
       objectReference: {fileID: 0}
     - target: {fileID: 5126527961139664760, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.1199999
+      value: -0.12000007
       objectReference: {fileID: 0}
     - target: {fileID: 5126527961139664760, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10393,7 +10393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5126527961139664760, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.7400007
+      value: 14.09
       objectReference: {fileID: 0}
     - target: {fileID: 5126527961139664767, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: orthographic size
@@ -12427,7 +12427,7 @@ GameObject:
   - component: {fileID: 1247015840}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
