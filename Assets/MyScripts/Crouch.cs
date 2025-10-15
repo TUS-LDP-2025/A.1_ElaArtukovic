@@ -1,4 +1,4 @@
-/*using StarterAssets;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +9,6 @@ public class Crouch : MonoBehaviour
     public float crouchStepSize = 0.05f;
     public float HeightStanding = 1f;
     public float HeightCrouching = 0.5f;
-    private bool isCrouching = false;
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,11 +19,11 @@ public class Crouch : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Crouching();
     }
-     private void OnCrouch(InputAction.CallbackContext context)
+     private void Crouching()
     {
-        isCrouching = context.ReadValueAsButton();
+        
         float newYScale;
 
         if (_input.crouch)
@@ -34,6 +33,7 @@ public class Crouch : MonoBehaviour
 
             newYScale = Mathf.Lerp(transform.localScale.y, 0.5f, crouchStepSize);
             transform.localScale = new Vector3(transform.localScale.x, newYScale, transform.localScale.z);
+            Debug.Log("Crouching");
         }
         else
         {
@@ -47,4 +47,3 @@ public class Crouch : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
    
 }
-*/

@@ -252,7 +252,7 @@
                     "name": "",
                     "id": "b77a5032-ba1a-4f9c-8a30-493361a5c378",
                     "path": "<Keyboard>/c",
-                    "interactions": "Press",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "Crouch",
