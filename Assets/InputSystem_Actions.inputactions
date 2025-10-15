@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "RaiseArm",
+                    "name": "Raise",
                     "type": "Button",
                     "id": "e462f6b3-a8de-427c-b2c3-cda1c8dd8242",
                     "expectedControlType": "",
@@ -489,7 +489,7 @@
                     "interactions": "Hold",
                     "processors": "",
                     "groups": "",
-                    "action": "RaiseArm",
+                    "action": "Raise",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
