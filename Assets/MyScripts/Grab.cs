@@ -1,6 +1,7 @@
 using StarterAssets;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
 public class PickUp : MonoBehaviour
@@ -10,6 +11,9 @@ public class PickUp : MonoBehaviour
     public Transform handTransform;
     public float grabRadius;
     private GameObject grabbedObject = null;
+    public float throwingForce;
+    private PlayerInput playerInput;
+    private InputAction throwAction;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,6 +21,13 @@ public class PickUp : MonoBehaviour
         if (armController == null)
         {
             armController = GetComponent<ArmController>();                       //add as safety measure if its not set in inspector
+        }
+
+        playerInput = GetComponent<PlayerInput>();
+        if (playerInput != null )
+        {
+            throwAction = playerInput.actions["Throw"];
+            
         }
     }
 
@@ -42,6 +53,11 @@ public class PickUp : MonoBehaviour
             {
                 ReleaseObject();
             }
+        }
+
+        if (grabbedObject != null && throwAction != null && throwAction.triggered)
+        {
+            ThrowObject();
         }
     }
 
@@ -70,11 +86,28 @@ public class PickUp : MonoBehaviour
     void ReleaseObject()
     {
         Rigidbody rb = grabbedObject.GetComponent<Rigidbody>();
+
         if (rb != null) rb.isKinematic = false;                                          //make physics normal again so it can fall when released
         {
             grabbedObject.transform.SetParent(null);
             grabbedObject = null;                                          //shouldn't be attached to parent anymore since its dropped
         }
+    }
+
+    void ThrowObject()
+    {
+        Rigidbody rb = grabbedObject.GetComponent<Rigidbody>();
+
+        if (rb != null) {
+
+            rb.isKinematic = false;                                                       //not working, stays in air
+            rb.linearVelocity = handTransform.forward * throwingForce;
+            grabbedObject.transform.SetParent(null);                                 //shouldn't be attached to parent anymore since its dropped
+        }
+
+        grabbedObject = null;
+        
+
     }
 
 }
