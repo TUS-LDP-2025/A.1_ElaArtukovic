@@ -13,6 +13,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool crouch;
+		public bool deflate;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -75,6 +76,11 @@ namespace StarterAssets
 		public void OnCrouch(InputValue value)
 		{
 			crouch = value.isPressed;
+		}
+
+		public void OnDeflate(InputValue value)
+		{
+			deflate = value.isPressed;
 		}
 
 		private void SetCursorState(bool newState)

@@ -21,7 +21,7 @@ public class ArmController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isRaising = Mouse.current.rightButton.isPressed;                       //check if its pressed, if yes then it can raise it
+        isRaising = Mouse.current.leftButton.isPressed;                       //check if its pressed, if yes then it can raise it
 
         if (isRaising)
         {
