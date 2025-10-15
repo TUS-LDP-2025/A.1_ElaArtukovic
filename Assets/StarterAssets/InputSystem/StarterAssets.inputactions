@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Hang",
+                    "type": "Button",
+                    "id": "1fc03a26-5fdd-4b32-beb3-4032cc8610dc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -281,7 +290,7 @@
                     "name": "",
                     "id": "18e1ae22-b1fd-4cd7-8a50-fde2f80b6acb",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "Deflate",
@@ -296,6 +305,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Raise",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec25b108-be00-4614-98dd-5a4d6265c275",
+                    "path": "<Keyboard>/h",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Hang",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

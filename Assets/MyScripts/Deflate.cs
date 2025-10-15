@@ -7,9 +7,9 @@ public class Deflate : MonoBehaviour
 
     private StarterAssetsInputs _input;
 
-    public float deflatingSize = 0.05f;
-    public float UsualRadius = 1f;
-    public float DeflatedRadius = 0.5f;
+    public float deflatingSize = 0.05f;              //increments like in crouch
+    public float UsualRadius = 1f;                   //the usual width of the player
+    public float DeflatedRadius = 0.5f;                 //skinnier version for squeezing through
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,18 +27,18 @@ public class Deflate : MonoBehaviour
     {
         float newXScale;
 
-        if (_input.deflate)
+        if (_input.deflate)                            //reference in starter assets
         {
             Debug.Log("Deflating");
 
-            newXScale = Mathf.Lerp(transform.localScale.x, 0.5f, deflatingSize);
-            transform.localScale = new Vector3(newXScale, transform.localScale.y, transform.localScale.z);
+            newXScale = Mathf.Lerp(transform.localScale.x, DeflatedRadius, deflatingSize);                              //same as crouch, make it slimmer when deflating
+            transform.localScale = new Vector3(newXScale, transform.localScale.y, transform.localScale.z);              
 
         }
 
         else
         {
-            newXScale = Mathf.Lerp(transform.localScale.x, 1f, deflatingSize);
+            newXScale = Mathf.Lerp(transform.localScale.x, UsualRadius, deflatingSize);                                   //turn it back when not deflating
             transform.localScale = new Vector3(newXScale, transform.localScale.y, transform.localScale.z);
         }
     }
