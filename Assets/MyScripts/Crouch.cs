@@ -12,7 +12,7 @@ public class Crouch : MonoBehaviour
     public float rayDistance = 20f;                //distance for raycast to check
     public LayerMask crouchableLayer;               //crouch layer
     public bool isCrouching = false;
-
+    public bool nothingOverhead = false;
     
     void Start()
     {
@@ -39,7 +39,7 @@ public class Crouch : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, newYScale, transform.localScale.z);         
             Debug.Log("Crouching");
         }
-        else
+        else if (_input.crouch == false && nothingOverhead == true)
         {
 
             isCrouching=false;
@@ -61,12 +61,14 @@ public class Crouch : MonoBehaviour
             if(hit.collider.CompareTag("Crouchable"))
             {
                 Debug.Log("Can't stand up, object above me");                      //not logging when colliding with tag
+                nothingOverhead = false;
                 HeightCrouching = 0.5f;
             }
         }
 
         else
         {
+            nothingOverhead = true;
             Debug.Log("Crouchable LayerMask value is" + crouchableLayer.value);          //check if its even a value not 0
         }
     }
