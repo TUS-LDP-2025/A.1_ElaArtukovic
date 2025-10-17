@@ -54,7 +54,7 @@ public class Crouch : MonoBehaviour
         RaycastHit hit;
         Vector3 rayOrigin = transform.position + Vector3.up * 1f;     //add offset, might help detect collider if it overlaps with player collider before the crouch collider
         Debug.DrawRay(rayOrigin, Vector3.up * rayDistance, Color.purple);
-        if (Physics.SphereCast(rayOrigin, 0.5f, Vector2.up, out hit))
+        if (Physics.SphereCast(rayOrigin, 0.5f, Vector2.up, out hit, 3f, crouchableLayer, QueryTriggerInteraction.Ignore))
         //if (Physics.Raycast(rayOrigin, Vector3.up, out hit, rayDistance, crouchableLayer))                   //when doing this for deflate add Vector3.left and right separate
         {
             Debug.Log("Hitting something");                            
