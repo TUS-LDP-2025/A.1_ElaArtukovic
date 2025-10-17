@@ -25,21 +25,21 @@ public class Deflate : MonoBehaviour
 
     private void Deflating()
     {
-        float newXScale;
+        float newXZScale;
 
         if (_input.deflate)                            //reference in starter assets
         {
             Debug.Log("Deflating");
 
-            newXScale = Mathf.Lerp(transform.localScale.x, DeflatedRadius, deflatingSize);                              //same as crouch, make it slimmer when deflating
-            transform.localScale = new Vector3(newXScale, transform.localScale.y, transform.localScale.z);              
+            newXZScale = Mathf.Lerp(transform.localScale.x, DeflatedRadius, deflatingSize);                              //same as crouch, make it slimmer when deflating
+            transform.localScale = new Vector3(newXZScale, transform.localScale.y, newXZScale);              
 
         }
 
         else
         {
-            newXScale = Mathf.Lerp(transform.localScale.x, UsualRadius, deflatingSize);                                   //turn it back when not deflating
-            transform.localScale = new Vector3(newXScale, transform.localScale.y, transform.localScale.z);
+            newXZScale = Mathf.Lerp(transform.localScale.x, UsualRadius, deflatingSize);                                   //turn it back when not deflating
+            transform.localScale = new Vector3(newXZScale, transform.localScale.y, newXZScale);
         }
     }
 }
