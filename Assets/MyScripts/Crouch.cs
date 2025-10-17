@@ -9,7 +9,8 @@ public class Crouch : MonoBehaviour
     public float crouchStepSize = 0.05f;             //increments bt which it will shift between the values
     public float HeightStanding = 1f;                   //same size as usual player height
     public float HeightCrouching = 0.5f;              //50% shorter
-   
+    public float rayDistance = 1.5f;                //distance for raycast to check
+    public LayerMask crouchableLayer;               //crouch layer
     
     void Start()
     {
@@ -20,6 +21,7 @@ public class Crouch : MonoBehaviour
     void Update()
     {
         Crouching();
+        CheckAbove();
     }
      private void Crouching()
     {
@@ -42,6 +44,11 @@ public class Crouch : MonoBehaviour
             newYScale = Mathf.Lerp(transform.localScale.y, HeightStanding, crouchStepSize);                          //go back to original size
             transform.localScale = new Vector3(transform.localScale.x, newYScale, transform.localScale.z);
         }
+    }
+
+    void CheckAbove()
+    {
+
     }
     
     
