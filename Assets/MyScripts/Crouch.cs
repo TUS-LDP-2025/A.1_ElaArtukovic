@@ -66,7 +66,7 @@ public class Crouch : MonoBehaviour
 
         else
         {
-            Debug.Log("[Raycast] didn't hit anything above");
+            Debug.Log("Crouchable LayerMask value is" + crouchableLayer.value);          //check if its even a value not 0
         }
     }
     
