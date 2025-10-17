@@ -20,20 +20,28 @@ jobs:
         id: def
         run: echo "DEF=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
 
-      - name: Create/update blank base branch (orphan)
+      - name: Create/update blank base branch (shares history)
         run: |
           set -euo pipefail
-          git fetch --all --prune
+          DEF="${{ steps.def.outputs.DEF }}"
+          # Create or reset grading-blank *from* the default branch (shared history)
           if git ls-remote --exit-code --heads origin "$BLANK_BRANCH" >/dev/null 2>&1; then
-            echo "Blank branch exists; leaving as-is."
+            git fetch origin "$BLANK_BRANCH":"$BLANK_BRANCH" || true
+            git checkout -B "$BLANK_BRANCH" "origin/$BLANK_BRANCH" || git checkout -B "$BLANK_BRANCH" "$DEF"
+            git reset --hard "$DEF"
           else
-            git checkout --orphan "$BLANK_BRANCH"
-            git rm -rf .
-            echo "Grading base" > .grading_base
-            git -c user.name="github-actions" -c user.email="actions@github.com" add .grading_base
-            git -c user.name="github-actions" -c user.email="actions@github.com" commit -m "Grading base (empty)"
-            git push origin "$BLANK_BRANCH"
+            git checkout -B "$BLANK_BRANCH" "$DEF"
           fi
+
+          # Remove everything on grading-blank and commit a minimal empty baseline
+          git rm -r -q --cached .
+          git clean -fdx
+          echo "Grading base" > .grading_base
+          git add -A
+          git -c user.name="github-actions" -c user.email="actions@github.com" commit -m "Grading base (empty)"
+          # Force-push so the blank base always reflects latest DEF ancestry
+          git push -f origin "$BLANK_BRANCH"
+
 
       - name: Create (or find) grading PR
         id: pr
