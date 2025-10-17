@@ -9,9 +9,10 @@ public class Crouch : MonoBehaviour
     public float crouchStepSize = 0.05f;             //increments bt which it will shift between the values
     public float HeightStanding = 1f;                   //same size as usual player height
     public float HeightCrouching = 0.5f;              //50% shorter
-    public float rayDistance = 10f;                //distance for raycast to check
+    public float rayDistance = 20f;                //distance for raycast to check
     public LayerMask crouchableLayer;               //crouch layer
     public bool isCrouching = false;
+
     
     void Start()
     {
@@ -50,8 +51,9 @@ public class Crouch : MonoBehaviour
     void CheckAbove()
     {
         RaycastHit hit;
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.5f;        //add offset, might help detect collider if it overlaps with player collider before the crouch collider
 
-        if (Physics.Raycast(transform.position, Vector3.up, out hit, rayDistance, crouchableLayer))                   //when doing this for deflate add Vector3.left and right separate
+        if (Physics.Raycast(rayOrigin, Vector3.up, out hit, rayDistance, crouchableLayer))                   //when doing this for deflate add Vector3.left and right separate
         {
             Debug.Log("Hitting something");                             //also not even showing
 
