@@ -10969,6 +10969,7 @@ MonoBehaviour:
   crouchableLayer:
     serializedVersion: 2
     m_Bits: 0
+  isCrouching: 0
 --- !u!114 &1006230657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12418,7 +12419,7 @@ GameObject:
   - component: {fileID: 1139597468}
   - component: {fileID: 1139597467}
   - component: {fileID: 1139597466}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (3)
   m_TagString: Crouchable
   m_Icon: {fileID: 0}

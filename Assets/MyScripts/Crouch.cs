@@ -11,6 +11,7 @@ public class Crouch : MonoBehaviour
     public float HeightCrouching = 0.5f;              //50% shorter
     public float rayDistance = 1.5f;                //distance for raycast to check
     public LayerMask crouchableLayer;               //crouch layer
+    public bool isCrouching = false;
     
     void Start()
     {
@@ -31,7 +32,7 @@ public class Crouch : MonoBehaviour
         if (_input.crouch)                   //reference it in starter assets 
         {
             Debug.Log("Crouching");
-
+            isCrouching =true;
 
             newYScale = Mathf.Lerp(transform.localScale.y, HeightCrouching, crouchStepSize);                   //lerp into new size when crouching, 
             transform.localScale = new Vector3(transform.localScale.x, newYScale, transform.localScale.z);         
@@ -40,7 +41,7 @@ public class Crouch : MonoBehaviour
         else
         {
 
-
+            isCrouching=false;
             newYScale = Mathf.Lerp(transform.localScale.y, HeightStanding, crouchStepSize);                          //go back to original size
             transform.localScale = new Vector3(transform.localScale.x, newYScale, transform.localScale.z);
         }
@@ -55,7 +56,7 @@ public class Crouch : MonoBehaviour
             if(hit.collider.CompareTag("Crouchable"))
             {
                 Debug.Log("Can't stand up, object above me");
-                
+                HeightCrouching = 0.5f;
             }
         }
     }
