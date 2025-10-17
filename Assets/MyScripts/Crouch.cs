@@ -51,7 +51,7 @@ public class Crouch : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, Vector3.up, out hit, rayDistance, crouchableLayer))
+        if (Physics.Raycast(transform.position, Vector3.up, out hit, rayDistance, crouchableLayer))                   //when doing this for deflate add Vector3.left and right separate
         {
             Debug.Log("Hitting something");                             //also not even showing
 
