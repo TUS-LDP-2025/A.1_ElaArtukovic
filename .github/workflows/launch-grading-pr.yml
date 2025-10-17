@@ -20,28 +20,19 @@ jobs:
         id: def
         run: echo "DEF=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
 
-      - name: Create/update blank base branch (shares history)
+      - name: Create/update blank base branch at repo root (shared history)
         run: |
           set -euo pipefail
           DEF="${{ steps.def.outputs.DEF }}"
-          # Create or reset grading-blank *from* the default branch (shared history)
-          if git ls-remote --exit-code --heads origin "$BLANK_BRANCH" >/dev/null 2>&1; then
-            git fetch origin "$BLANK_BRANCH":"$BLANK_BRANCH" || true
-            git checkout -B "$BLANK_BRANCH" "origin/$BLANK_BRANCH" || git checkout -B "$BLANK_BRANCH" "$DEF"
-            git reset --hard "$DEF"
-          else
-            git checkout -B "$BLANK_BRANCH" "$DEF"
-          fi
-
-          # Remove everything on grading-blank and commit a minimal empty baseline
-          git rm -r -q --cached .
-          git clean -fdx
-          echo "Grading base" > .grading_base
-          git add -A
-          git -c user.name="github-actions" -c user.email="actions@github.com" commit -m "Grading base (empty)"
-          # Force-push so the blank base always reflects latest DEF ancestry
+          git fetch --all --prune
+          git checkout "$DEF"
+      
+          # Find the root (first) commit of the default branch
+          ROOT=$(git rev-list --max-parents=0 "$DEF" | tail -n1)
+      
+          # Create or reset grading-blank to the root commit
+          git branch -f "$BLANK_BRANCH" "$ROOT"
           git push -f origin "$BLANK_BRANCH"
-
 
       - name: Create (or find) grading PR
         id: pr
