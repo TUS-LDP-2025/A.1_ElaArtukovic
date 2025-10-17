@@ -1,0 +1,66 @@
+# .github/workflows/launch-grading-pr.yml
+name: Launch Grading PR
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  create-and-trigger:
+    runs-on: ubuntu-latest
+    env:
+      BLANK_BRANCH: grading-blank
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine default branch
+        id: def
+        run: echo "DEF=${{ github.event.repository.default_branch }}" >> $GITHUB_OUTPUT
+
+      - name: Create/update blank base branch (orphan)
+        run: |
+          git fetch --all --prune
+          if git ls-remote --exit-code --heads origin "$BLANK_BRANCH" >/dev/null 2>&1; then
+            echo "Blank branch exists; leaving as-is."
+          else
+            git checkout --orphan "$BLANK_BRANCH"
+            git rm -rf .
+            echo "Grading base" > .grading_base
+            git add .grading_base
+            git -c user.name="github-actions" -c user.email="actions@github.com" commit -m "Grading base (empty)"
+            git push origin "$BLANK_BRANCH"
+          fi
+
+      - name: Create (or find) grading PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DEF="${{ steps.def.outputs.DEF }}"
+          # Try to find existing PR DEF -> BLANK
+          PR_NUM=$(gh pr list --base "$BLANK_BRANCH" --head "$DEF" --json number -q '.[0].number')
+          if [ -z "$PR_NUM" ]; then
+            TITLE="Grading PR: ${DEF} → ${BLANK_BRANCH}"
+            BODY="Automated grading PR comparing the full repo to a blank base."
+            PR_URL=$(gh pr create --base "$BLANK_BRANCH" --head "$DEF" --title "$TITLE" --body "$BODY")
+            echo "url=$PR_URL" >> $GITHUB_OUTPUT
+            PR_NUM=$(gh pr view --json number -q .number)
+          else
+            echo "Found existing PR #$PR_NUM"
+            echo "url=$(gh pr view $PR_NUM --json url -q .url)" >> $GITHUB_OUTPUT
+          fi
+          echo "number=$PR_NUM" >> $GITHUB_OUTPUT
+
+      - name: Trigger AI review via comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ steps.pr.outputs.number }} -b "/review"
+          echo "Triggered PR-Agent with /review on PR #${{ steps.pr.outputs.number }}"
+
+      - name: Output link
+        run: echo "PR link: ${{ steps.pr.outputs.url }}"
