@@ -9,7 +9,7 @@ public class Crouch : MonoBehaviour
     public float crouchStepSize = 0.05f;             //increments bt which it will shift between the values
     public float HeightStanding = 1f;                   //same size as usual player height
     public float HeightCrouching = 0.5f;              //50% shorter
-    public float rayDistance = 5f;                //distance for raycast to check
+    public float rayDistance = 10f;                //distance for raycast to check
     public LayerMask crouchableLayer;               //crouch layer
     public bool isCrouching = false;
     
@@ -53,7 +53,7 @@ public class Crouch : MonoBehaviour
 
         if (Physics.Raycast(transform.position, Vector3.up, out hit, rayDistance, crouchableLayer))
         {
-            Debug.Log("Hitting something");
+            Debug.Log("Hitting something");                             //also not even showing
 
             if(hit.collider.CompareTag("Crouchable"))
             {
