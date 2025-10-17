@@ -48,7 +48,16 @@ public class Crouch : MonoBehaviour
 
     void CheckAbove()
     {
+        RaycastHit hit;
 
+        if (Physics.Raycast(transform.position, Vector3.up, out hit, rayDistance, crouchableLayer))
+        {
+            if(hit.collider.CompareTag("Crouchable"))
+            {
+                Debug.Log("Can't stand up, object above me");
+                
+            }
+        }
     }
     
     
