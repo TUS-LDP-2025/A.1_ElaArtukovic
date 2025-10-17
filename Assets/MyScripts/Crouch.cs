@@ -61,6 +61,11 @@ public class Crouch : MonoBehaviour
                 HeightCrouching = 0.5f;
             }
         }
+
+        else
+        {
+            Debug.Log("[Raycast] didn't hit anything above");
+        }
     }
     
     
