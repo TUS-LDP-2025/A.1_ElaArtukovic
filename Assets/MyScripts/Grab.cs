@@ -1,4 +1,5 @@
 using StarterAssets;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,8 +13,9 @@ public class PickUp : MonoBehaviour
     public float grabRadius;
     private GameObject grabbedObject = null;
     public float throwingForce;
-    private PlayerInput playerInput;
     private InputAction throwAction;
+    public bool throwing;
+    public Transform cameraTransform;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,12 +25,13 @@ public class PickUp : MonoBehaviour
             armController = GetComponent<ArmController>();                       //add as safety measure if its not set in inspector
         }
 
-        playerInput = GetComponent<PlayerInput>();
-        if (playerInput != null )
+            throwAction = InputSystem.actions.FindAction("Throw");
+
+        if(throwAction == null) 
         {
-            throwAction = playerInput.actions["Throw"];
-            
+            Debug.Log("oH NO");
         }
+        
     }
 
     // Update is called once per frame
@@ -39,25 +42,21 @@ public class PickUp : MonoBehaviour
             return;
         }
 
-        if (armController.isRaising)              //reference arm controller cuz i gotta know when its actually up to be able to grab, dont grab just when close
+        if (armController.isRaising && grabbedObject == null && !throwing)            //if arm is raising and nothing is grabbed and ur not throwing
         {
-            if (grabbedObject == null)               //grab only if i didnt already grab something
-            {
+            
                 GrabObject();
-            }
+            
         }
 
-        else
-        {
-            if (grabbedObject != null)                   //drop object if arm isnt raised anymore and if we are still holding it
-            {
-                ReleaseObject();
-            }
-        }
-
-        if (grabbedObject != null && throwAction != null && throwAction.triggered)
+        else if (grabbedObject != null && throwAction != null && throwAction.triggered)       //if holding object and throwing by clicking T
         {
             ThrowObject();
+        }
+
+        else if (!armController.isRaising && grabbedObject != null)                          //stopped raising arm and not grabbing object anymore
+        {
+            ReleaseObject();
         }
     }
 
@@ -99,15 +98,24 @@ public class PickUp : MonoBehaviour
         Rigidbody rb = grabbedObject.GetComponent<Rigidbody>();
 
         if (rb != null) {
+            Debug.Log("Throwing object");
 
             rb.isKinematic = false;                                                       //not working, stays in air
-            rb.linearVelocity = handTransform.forward * throwingForce;
+            rb.linearVelocity = cameraTransform.forward * throwingForce;
             grabbedObject.transform.SetParent(null);                                 //shouldn't be attached to parent anymore since its dropped
+            StartCoroutine(ThrowCooldown(2f));
         }
 
         grabbedObject = null;
         
 
+    }
+
+    IEnumerator ThrowCooldown(float delay)                   //cooldown so it doesnt snap back to grab while throwing
+    {
+        throwing = true;
+        yield return new WaitForSeconds(delay);
+        throwing = false;
     }
 
 }

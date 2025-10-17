@@ -13,6 +13,7 @@ public class Crouch : MonoBehaviour
     public LayerMask crouchableLayer;               //crouch layer
     public bool isCrouching = false;
     public bool nothingOverhead = false;
+    public Transform overheadCheck;
     
     void Start()
     {
@@ -53,14 +54,14 @@ public class Crouch : MonoBehaviour
         RaycastHit hit;
         Vector3 rayOrigin = transform.position + Vector3.up * 1f;     //add offset, might help detect collider if it overlaps with player collider before the crouch collider
         Debug.DrawRay(rayOrigin, Vector3.up * rayDistance, Color.purple);
-
-        if (Physics.Raycast(rayOrigin, Vector3.up, out hit, rayDistance, crouchableLayer))                   //when doing this for deflate add Vector3.left and right separate
+        if (Physics.SphereCast(rayOrigin, 0.5f, Vector2.up, out hit))
+        //if (Physics.Raycast(rayOrigin, Vector3.up, out hit, rayDistance, crouchableLayer))                   //when doing this for deflate add Vector3.left and right separate
         {
-            Debug.Log("Hitting something");                             //also not even showing
+            Debug.Log("Hitting something");                            
 
             if(hit.collider.CompareTag("Crouchable"))
             {
-                Debug.Log("Can't stand up, object above me");                      //not logging when colliding with tag
+                Debug.Log("Can't stand up, object above me");                      
                 nothingOverhead = false;
                 HeightCrouching = 0.5f;
             }
