@@ -37,7 +37,7 @@ jobs:
       - name: Create (or find) grading PR
         id: pr
         env:
-          GH_TOKEN: ${{ secrets.GH_PR_CREATOR }}  # or ${{ github.token }} if allowed
+          GH_TOKEN: ${{ github.token }}    # or ${{ secrets.GH_PR_CREATOR }}  
         run: |
           set -euo pipefail
           DEF="${{ steps.def.outputs.DEF }}"
