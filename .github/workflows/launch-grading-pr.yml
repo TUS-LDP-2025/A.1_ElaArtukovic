@@ -46,11 +46,10 @@ jobs:
       - name: Create (or find) grading PR
         id: pr
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PR_CREATOR }}   # or GITHUB_TOKEN if allowed to create PRs
         run: |
           set -euo pipefail
           DEF="${{ steps.def.outputs.DEF }}"
-          # Find existing PR DEF -> BLANK
           PR_NUM=$(gh pr list --base "$BLANK_BRANCH" --head "$DEF" --json number -q '.[0].number' || true)
           if [ -z "${PR_NUM:-}" ]; then
             TITLE="Grading PR: ${DEF} → ${BLANK_BRANCH}"
