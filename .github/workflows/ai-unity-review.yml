@@ -1,0 +1,45 @@
+# .github/workflows/ai-unity-review.yml
+name: AI Unity PR Review
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+  issue_comment:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pr-agent:
+    if: ${{ github.event.sender.type != 'Bot' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PR-Agent review
+        uses: qodo-ai/pr-agent@main
+        env:
+          # Required creds
+          OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}        # or map from your OPENAI_API_KEY secret
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Auto-run tools (instead of your previous `pr_actions` input)
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "false"
+          github_action_config.auto_improve: "false"
+          github_action_config.pr_actions: '["opened","reopened","ready_for_review","review_requested"]'
+
+          # (Optional) choose a model using env keys, not `with:` inputs
+          # Default is OpenAI; you can override:
+          # config.model: "openai/gpt-4o-mini"
+
+          # Unity-focused extra rules (you can also move these to .pr_agent.toml)
+          pr_reviewer.extra_instructions: |
+            - Unity/C#: use Time.deltaTime for frame-dependent motion.
+            - Put physics & Rigidbody calls in FixedUpdate; input/camera in Update.
+            - Avoid allocations in Update (LINQ, string concat, new objects); cache GetComponent.
+            - Prefer object pooling over frequent Instantiate/Destroy.
+            - Validate destroyed UnityEngine.Object (custom null).
+            - Don’t mix CharacterController physics with Rigidbody.
+            - Use LayerMasks with Physics queries; avoid broad overlaps each frame.
