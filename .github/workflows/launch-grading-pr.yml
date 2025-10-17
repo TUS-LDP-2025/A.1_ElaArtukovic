@@ -37,14 +37,14 @@ jobs:
       - name: Create (or find) grading PR
         id: pr
         env:
-          GH_TOKEN: ${{ github.token }}   # or: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PR_CREATOR }}  # or ${{ github.token }} if allowed
         run: |
           set -euo pipefail
           DEF="${{ steps.def.outputs.DEF }}"
           PR_NUM=$(gh pr list --base "$BLANK_BRANCH" --head "$DEF" --json number -q '.[0].number' || true)
           if [ -z "${PR_NUM:-}" ]; then
             TITLE="Grading PR: ${DEF} → ${BLANK_BRANCH}"
-            BODY="Automated grading PR comparing the full repo to a blank base."
+            BODY="Automated grading PR comparing the full repo to its root commit."
             PR_URL=$(gh pr create --base "$BLANK_BRANCH" --head "$DEF" --title "$TITLE" --body "$BODY")
             PR_NUM=$(gh pr view --json number -q .number)
           else
@@ -52,6 +52,7 @@ jobs:
           fi
           echo "number=$PR_NUM" >> "$GITHUB_OUTPUT"
           echo "url=$PR_URL"    >> "$GITHUB_OUTPUT"
+
 
       - name: Trigger AI review via comment
         if: ${{ steps.pr.outputs.number != '' }}
