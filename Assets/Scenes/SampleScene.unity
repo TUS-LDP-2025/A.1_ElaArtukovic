@@ -10968,8 +10968,9 @@ MonoBehaviour:
   rayDistance: 1.5
   crouchableLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   isCrouching: 0
+  nothingOverhead: 0
 --- !u!114 &1006230657
 MonoBehaviour:
   m_ObjectHideFlags: 0
