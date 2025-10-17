@@ -55,7 +55,7 @@ public class Crouch : MonoBehaviour
         {
             if(hit.collider.CompareTag("Crouchable"))
             {
-                Debug.Log("Can't stand up, object above me");
+                Debug.Log("Can't stand up, object above me");                      //not logging when colliding with tag
                 HeightCrouching = 0.5f;
             }
         }
