@@ -1,3 +1,4 @@
+# .github/workflows/launch-grading-pr.yml
 name: Launch Grading PR
 on:
   workflow_dispatch:
@@ -12,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BLANK_BRANCH: grading-blank
+      # Choose ONE of the following two lines:
+      # 1) If org allows PR creation by GITHUB_TOKEN:
+      # GH_TOKEN: ${{ github.token }}
+      # 2) If org forbids it, use a PAT secret (recommended name below):
+      # GH_TOKEN: ${{ secrets.GH_PR_CREATOR }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,31 +27,46 @@ jobs:
         id: def
         run: echo "DEF=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
 
-      - name: Create/update blank base branch at repo root (shared history)
+      # Make grading-blank point to the repo's *first* commit so there's a shared ancestor
+      # and main is ahead (PR shows the whole project).
+      - name: Create/update grading base at root commit
+        id: base
         run: |
           set -euo pipefail
           DEF="${{ steps.def.outputs.DEF }}"
           git fetch --all --prune
           git checkout "$DEF"
-      
+
           # Find the root (first) commit of the default branch
           ROOT=$(git rev-list --max-parents=0 "$DEF" | tail -n1)
-      
-          # Create or reset grading-blank to the root commit
+
+          # Point grading-blank at the root commit and push it (force to keep ancestry correct)
           git branch -f "$BLANK_BRANCH" "$ROOT"
           git push -f origin "$BLANK_BRANCH"
 
+          # How many commits is DEF ahead of BLANK?
+          AHEAD=$(git rev-list --count "$BLANK_BRANCH..$DEF")
+          echo "AHEAD=$AHEAD" >> "$GITHUB_OUTPUT"
+
+      - name: Abort gracefully if there is nothing to compare
+        if: ${{ steps.base.outputs.AHEAD == '0' }}
+        run: |
+          echo "::warning title=No commits to review::The default branch is not ahead of the grading base (likely a single-commit repo). Use your no-PR grading report workflow for this repo."
+          exit 0
+
+      - name: Check gh auth (diagnostic)
+        run: gh auth status -h github.com
+
       - name: Create (or find) grading PR
         id: pr
-        env:
-          GH_TOKEN: ${{ github.token }}    # or ${{ secrets.GH_PR_CREATOR }}  
         run: |
           set -euo pipefail
           DEF="${{ steps.def.outputs.DEF }}"
+          # Try to find existing PR DEF -> BLANK
           PR_NUM=$(gh pr list --base "$BLANK_BRANCH" --head "$DEF" --json number -q '.[0].number' || true)
           if [ -z "${PR_NUM:-}" ]; then
             TITLE="Grading PR: ${DEF} → ${BLANK_BRANCH}"
-            BODY="Automated grading PR comparing the full repo to its root commit."
+            BODY="Automated grading PR comparing the full repo to the root commit."
             PR_URL=$(gh pr create --base "$BLANK_BRANCH" --head "$DEF" --title "$TITLE" --body "$BODY")
             PR_NUM=$(gh pr view --json number -q .number)
           else
@@ -53,11 +75,8 @@ jobs:
           echo "number=$PR_NUM" >> "$GITHUB_OUTPUT"
           echo "url=$PR_URL"    >> "$GITHUB_OUTPUT"
 
-
       - name: Trigger AI review via comment
         if: ${{ steps.pr.outputs.number != '' }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh pr comment ${{ steps.pr.outputs.number }} -b "/review"
 
       - name: Output link
